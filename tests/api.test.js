@@ -1,12 +1,16 @@
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
+
+process.env.ADMIN_KEY = 'test-admin-key';
 const app = require('../server/index');
+
+const ADMIN_KEY = process.env.ADMIN_KEY;
 
 let server;
 let baseUrl;
 
-function request(method, path, body) {
+function request(method, path, body, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
     const url = new URL(path, baseUrl);
     const options = {
@@ -14,7 +18,7 @@ function request(method, path, body) {
       hostname: url.hostname,
       port: url.port,
       path: url.pathname,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...extraHeaders },
     };
     const req = http.request(options, (res) => {
       let data = '';
@@ -62,8 +66,14 @@ describe('API', () => {
     assert.equal(res.body.currency, 'USD');
   });
 
-  it('POST /api/portfolio/assets validates input', async () => {
+  it('POST /api/portfolio/assets without admin key returns 401', async () => {
     const res = await request('POST', '/api/portfolio/assets', { name: 'Test' });
+    assert.equal(res.status, 401);
+    assert.ok(res.body.error);
+  });
+
+  it('POST /api/portfolio/assets validates input', async () => {
+    const res = await request('POST', '/api/portfolio/assets', { name: 'Test' }, { 'X-Admin-Key': ADMIN_KEY });
     assert.equal(res.status, 400);
     assert.ok(res.body.error);
   });
@@ -73,7 +83,7 @@ describe('API', () => {
       name: 'Bad',
       type: 'stock',
       value: -100,
-    });
+    }, { 'X-Admin-Key': ADMIN_KEY });
     assert.equal(res.status, 400);
     assert.ok(res.body.error);
   });
@@ -83,7 +93,7 @@ describe('API', () => {
       name: 'AAPL',
       type: 'stock',
       value: 150.50,
-    });
+    }, { 'X-Admin-Key': ADMIN_KEY });
     assert.equal(res.status, 201);
     assert.equal(res.body.name, 'AAPL');
     assert.equal(res.body.type, 'stock');
@@ -96,5 +106,30 @@ describe('API', () => {
     assert.equal(res.status, 200);
     assert.ok(res.body.totalAssets >= 1);
     assert.ok(res.body.totalValue > 0);
+  });
+
+  it('DELETE /api/portfolio/assets/:id without admin key returns 401', async () => {
+    const res = await request('DELETE', '/api/portfolio/assets/1');
+    assert.equal(res.status, 401);
+    assert.ok(res.body.error);
+  });
+
+  it('DELETE /api/portfolio/assets/:id removes asset', async () => {
+    const createRes = await request('POST', '/api/portfolio/assets', {
+      name: 'ToDelete',
+      type: 'cash',
+      value: 500,
+    }, { 'X-Admin-Key': ADMIN_KEY });
+    assert.equal(createRes.status, 201);
+    const id = createRes.body.id;
+
+    const delRes = await request('DELETE', `/api/portfolio/assets/${id}`, null, { 'X-Admin-Key': ADMIN_KEY });
+    assert.equal(delRes.status, 204);
+  });
+
+  it('DELETE /api/portfolio/assets/:id returns 404 for missing asset', async () => {
+    const res = await request('DELETE', '/api/portfolio/assets/99999', null, { 'X-Admin-Key': ADMIN_KEY });
+    assert.equal(res.status, 404);
+    assert.ok(res.body.error);
   });
 });
