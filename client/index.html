@@ -12,6 +12,15 @@
     <p class="subtitle">Autonomous Financial System</p>
   </header>
   <main>
+    <section id="admin-auth" class="card">
+      <h2>Admin Access</h2>
+      <form id="admin-key-form">
+        <label for="admin-key-input">Admin Key</label>
+        <input type="password" id="admin-key-input" placeholder="Enter admin key">
+        <button type="submit">Set Key</button>
+      </form>
+      <p id="admin-key-message"></p>
+    </section>
     <section id="summary" class="card">
       <h2>Portfolio Summary</h2>
       <div id="summary-content">
@@ -46,6 +55,7 @@
             <th>Name</th>
             <th>Type</th>
             <th>Value</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="assets-body"></tbody>
