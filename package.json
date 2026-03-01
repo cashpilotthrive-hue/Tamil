@@ -1,0 +1,21 @@
+{
+  "name": "tamil",
+  "version": "1.0.0",
+  "description": "Autonomous financial system - full-stack application",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test tests/**/*.test.js",
+    "lint": "node --check server/**/*.js client/*.js tests/**/*.js"
+  },
+  "keywords": [
+    "finance",
+    "autonomous",
+    "full-stack"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {}
+}

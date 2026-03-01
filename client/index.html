@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamil - Autonomous Financial System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Tamil</h1>
+    <p class="subtitle">Autonomous Financial System</p>
+  </header>
+  <main>
+    <section id="summary" class="card">
+      <h2>Portfolio Summary</h2>
+      <div id="summary-content">
+        <p>Loading...</p>
+      </div>
+    </section>
+    <section id="add-asset" class="card">
+      <h2>Add Asset</h2>
+      <form id="asset-form">
+        <label for="asset-name">Name</label>
+        <input type="text" id="asset-name" required>
+        <label for="asset-type">Type</label>
+        <select id="asset-type" required>
+          <option value="">Select type</option>
+          <option value="stock">Stock</option>
+          <option value="bond">Bond</option>
+          <option value="crypto">Crypto</option>
+          <option value="cash">Cash</option>
+        </select>
+        <label for="asset-value">Value (USD)</label>
+        <input type="number" id="asset-value" min="0" step="0.01" required>
+        <button type="submit">Add Asset</button>
+      </form>
+      <p id="form-message"></p>
+    </section>
+    <section id="assets" class="card">
+      <h2>Assets</h2>
+      <table id="assets-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody id="assets-body"></tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Tamil - Autonomous Financial System</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
