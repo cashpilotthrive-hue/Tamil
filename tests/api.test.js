@@ -20,7 +20,13 @@ function request(method, path, body) {
       let data = '';
       res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => {
-        resolve({ status: res.statusCode, body: JSON.parse(data) });
+        let body;
+        try {
+          body = JSON.parse(data);
+        } catch {
+          body = data;
+        }
+        resolve({ status: res.statusCode, body });
       });
     });
     req.on('error', reject);

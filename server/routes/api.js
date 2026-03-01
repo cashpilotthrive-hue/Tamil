@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+let nextAssetId = 1;
 const portfolio = {
   assets: [],
   totalValue: 0,
@@ -23,7 +24,7 @@ router.post('/portfolio/assets', (req, res) => {
   if (typeof value !== 'number' || value < 0) {
     return res.status(400).json({ error: 'value must be a non-negative number' });
   }
-  const asset = { id: portfolio.assets.length + 1, name, value, type };
+  const asset = { id: nextAssetId++, name, value, type };
   portfolio.assets.push(asset);
   portfolio.totalValue = portfolio.assets.reduce((sum, a) => sum + a.value, 0);
   res.status(201).json(asset);
