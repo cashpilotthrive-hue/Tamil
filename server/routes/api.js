@@ -47,4 +47,36 @@ router.get('/portfolio/summary', (_req, res) => {
   res.json(summary);
 });
 
+// Export helper functions for admin use
+function getPortfolio() {
+  return portfolio;
+}
+
+function deleteAsset(id) {
+  const index = portfolio.assets.findIndex((a) => a.id === id);
+  if (index === -1) return false;
+  portfolio.assets.splice(index, 1);
+  portfolio.totalValue = portfolio.assets.reduce((sum, a) => sum + a.value, 0);
+  return true;
+}
+
+function updateAsset(id, updates) {
+  const asset = portfolio.assets.find((a) => a.id === id);
+  if (!asset) return null;
+  if (updates.name) asset.name = updates.name;
+  if (updates.type) asset.type = updates.type;
+  if (updates.value != null) asset.value = updates.value;
+  portfolio.totalValue = portfolio.assets.reduce((sum, a) => sum + a.value, 0);
+  return asset;
+}
+
+function clearPortfolio() {
+  portfolio.assets = [];
+  portfolio.totalValue = 0;
+}
+
 module.exports = router;
+module.exports.getPortfolio = getPortfolio;
+module.exports.deleteAsset = deleteAsset;
+module.exports.updateAsset = updateAsset;
+module.exports.clearPortfolio = clearPortfolio;
