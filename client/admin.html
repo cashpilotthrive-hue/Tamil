@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Tamil</title>
+  <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+  <div id="login-page" class="page">
+    <div class="login-container">
+      <h1>Admin Login</h1>
+      <form id="login-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+        <button type="submit">Login</button>
+      </form>
+      <p id="login-message"></p>
+      <p class="note">Default credentials: admin / admin123</p>
+    </div>
+  </div>
+
+  <div id="admin-page" class="page hidden">
+    <header>
+      <h1>Tamil Admin Panel</h1>
+      <div class="header-actions">
+        <a href="/" class="btn-secondary">User Dashboard</a>
+        <button id="logout-btn" class="btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="stats" class="card">
+        <h2>Portfolio Statistics</h2>
+        <div id="stats-content">
+          <p>Loading...</p>
+        </div>
+      </section>
+
+      <section id="manage-assets" class="card">
+        <h2>Manage Assets</h2>
+        <table id="admin-assets-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Value</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-assets-body"></tbody>
+        </table>
+        <div class="bulk-actions">
+          <button id="clear-portfolio-btn" class="btn-danger">Clear All Assets</button>
+        </div>
+      </section>
+
+      <section id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+          <h3>Edit Asset</h3>
+          <form id="edit-form">
+            <input type="hidden" id="edit-asset-id">
+            <label for="edit-name">Name</label>
+            <input type="text" id="edit-name" required>
+            <label for="edit-type">Type</label>
+            <select id="edit-type" required>
+              <option value="stock">Stock</option>
+              <option value="bond">Bond</option>
+              <option value="crypto">Crypto</option>
+              <option value="cash">Cash</option>
+            </select>
+            <label for="edit-value">Value (USD)</label>
+            <input type="number" id="edit-value" min="0" step="0.01" required>
+            <div class="modal-actions">
+              <button type="submit" class="btn-primary">Save</button>
+              <button type="button" id="cancel-edit-btn" class="btn-secondary">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Tamil - Admin Panel</p>
+    </footer>
+  </div>
+
+  <script src="admin-app.js"></script>
+</body>
+</html>
