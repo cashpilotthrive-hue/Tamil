@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamil - Admin Panel</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Tamil</h1>
+    <p class="subtitle">Admin Panel</p>
+    <nav>
+      <a href="/" class="nav-link">Portfolio</a>
+      <a href="/admin.html" class="nav-link active">Admin</a>
+    </nav>
+  </header>
+  <main>
+    <section id="admin-summary" class="card">
+      <h2>Portfolio Summary</h2>
+      <div id="admin-summary-content">
+        <p>Loading...</p>
+      </div>
+    </section>
+    <section id="edit-asset-section" class="card" style="display:none">
+      <h2>Edit Asset</h2>
+      <form id="edit-form">
+        <input type="hidden" id="edit-id">
+        <label for="edit-name">Name</label>
+        <input type="text" id="edit-name" required>
+        <label for="edit-type">Type</label>
+        <select id="edit-type" required>
+          <option value="">Select type</option>
+          <option value="stock">Stock</option>
+          <option value="bond">Bond</option>
+          <option value="crypto">Crypto</option>
+          <option value="cash">Cash</option>
+        </select>
+        <label for="edit-value">Value (USD)</label>
+        <input type="number" id="edit-value" min="0" step="0.01" required>
+        <div class="form-actions">
+          <button type="submit">Save Changes</button>
+          <button type="button" id="cancel-edit" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
+      <p id="edit-message"></p>
+    </section>
+    <section id="admin-assets" class="card">
+      <div class="section-header">
+        <h2>Manage Assets</h2>
+        <button id="reset-btn" class="btn-danger">Reset Portfolio</button>
+      </div>
+      <table id="admin-assets-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admin-assets-body"></tbody>
+      </table>
+      <p id="admin-message"></p>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Tamil - Autonomous Financial System</p>
+  </footer>
+  <script src="admin.js"></script>
+</body>
+</html>

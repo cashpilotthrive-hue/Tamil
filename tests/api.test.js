@@ -97,4 +97,71 @@ describe('API', () => {
     assert.ok(res.body.totalAssets >= 1);
     assert.ok(res.body.totalValue > 0);
   });
+
+  it('PUT /api/portfolio/assets/:id updates asset', async () => {
+    const create = await request('POST', '/api/portfolio/assets', {
+      name: 'BTC',
+      type: 'crypto',
+      value: 30000,
+    });
+    assert.equal(create.status, 201);
+    const id = create.body.id;
+
+    const update = await request('PUT', `/api/portfolio/assets/${id}`, {
+      name: 'BTC Updated',
+      type: 'crypto',
+      value: 35000,
+    });
+    assert.equal(update.status, 200);
+    assert.equal(update.body.name, 'BTC Updated');
+    assert.equal(update.body.value, 35000);
+    assert.equal(update.body.id, id);
+  });
+
+  it('PUT /api/portfolio/assets/:id returns 404 for unknown id', async () => {
+    const res = await request('PUT', '/api/portfolio/assets/99999', {
+      name: 'Ghost',
+      type: 'cash',
+      value: 1,
+    });
+    assert.equal(res.status, 404);
+    assert.ok(res.body.error);
+  });
+
+  it('DELETE /api/portfolio/assets/:id removes asset', async () => {
+    const create = await request('POST', '/api/portfolio/assets', {
+      name: 'ETH',
+      type: 'crypto',
+      value: 2000,
+    });
+    assert.equal(create.status, 201);
+    const id = create.body.id;
+
+    const del = await request('DELETE', `/api/portfolio/assets/${id}`);
+    assert.equal(del.status, 204);
+
+    const portfolio = await request('GET', '/api/portfolio');
+    assert.ok(!portfolio.body.assets.find((a) => a.id === id));
+  });
+
+  it('DELETE /api/portfolio/assets/:id returns 404 for unknown id', async () => {
+    const res = await request('DELETE', '/api/portfolio/assets/99999');
+    assert.equal(res.status, 404);
+    assert.ok(res.body.error);
+  });
+
+  it('DELETE /api/portfolio/assets resets portfolio', async () => {
+    await request('POST', '/api/portfolio/assets', {
+      name: 'MSFT',
+      type: 'stock',
+      value: 400,
+    });
+
+    const del = await request('DELETE', '/api/portfolio/assets');
+    assert.equal(del.status, 204);
+
+    const portfolio = await request('GET', '/api/portfolio');
+    assert.equal(portfolio.body.assets.length, 0);
+    assert.equal(portfolio.body.totalValue, 0);
+  });
 });
