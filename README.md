@@ -49,6 +49,12 @@ tests/           Test suite
 | GET    | `/api/portfolio`          | Get full portfolio      |
 | POST   | `/api/portfolio/assets`   | Add an asset            |
 | GET    | `/api/portfolio/summary`  | Portfolio summary       |
+| DELETE | `/api/portfolio/assets/:id` | Remove an asset (admin token required) |
+| POST   | `/api/admin/reset`        | Reset portfolio (admin token required) |
+
+### Admin Token
+
+Set `ADMIN_TOKEN` in your environment to protect admin endpoints. If unset, it defaults to `letmein`. The client UI includes an Admin Controls section where you can provide the token, delete assets, and reset the portfolio.
 
 ## License
 

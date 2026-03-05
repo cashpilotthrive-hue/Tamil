@@ -37,6 +37,17 @@
       </form>
       <p id="form-message"></p>
     </section>
+    <section id="admin" class="card">
+      <h2>Admin Controls</h2>
+      <p class="muted">Provide the admin token to unlock management actions.</p>
+      <label for="admin-token">Admin Token</label>
+      <input type="password" id="admin-token" placeholder="Enter admin token">
+      <div class="admin-actions">
+        <button type="button" id="save-admin-token">Save Token</button>
+        <button type="button" id="reset-portfolio">Reset Portfolio</button>
+      </div>
+      <p id="admin-message"></p>
+    </section>
     <section id="assets" class="card">
       <h2>Assets</h2>
       <table id="assets-table">
@@ -46,6 +57,7 @@
             <th>Name</th>
             <th>Type</th>
             <th>Value</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="assets-body"></tbody>
