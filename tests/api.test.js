@@ -1,12 +1,17 @@
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
+
+const ADMIN_TOKEN = 'test-admin';
+process.env.ADMIN_TOKEN = ADMIN_TOKEN;
+
 const app = require('../server/index');
 
 let server;
 let baseUrl;
+let createdAssetId;
 
-function request(method, path, body) {
+function request(method, path, body, headers = {}) {
   return new Promise((resolve, reject) => {
     const url = new URL(path, baseUrl);
     const options = {
@@ -14,7 +19,7 @@ function request(method, path, body) {
       hostname: url.hostname,
       port: url.port,
       path: url.pathname,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...headers },
     };
     const req = http.request(options, (res) => {
       let data = '';
@@ -89,6 +94,7 @@ describe('API', () => {
     assert.equal(res.body.type, 'stock');
     assert.equal(res.body.value, 150.50);
     assert.ok(res.body.id);
+    createdAssetId = res.body.id;
   });
 
   it('GET /api/portfolio/summary reflects added assets', async () => {
@@ -96,5 +102,36 @@ describe('API', () => {
     assert.equal(res.status, 200);
     assert.ok(res.body.totalAssets >= 1);
     assert.ok(res.body.totalValue > 0);
+  });
+
+  it('DELETE /api/portfolio/assets/:id requires admin token', async () => {
+    const res = await request('DELETE', `/api/portfolio/assets/${createdAssetId}`);
+    assert.equal(res.status, 401);
+    assert.ok(res.body.error);
+  });
+
+  it('DELETE /api/portfolio/assets/:id removes asset with admin token', async () => {
+    const res = await request(
+      'DELETE',
+      `/api/portfolio/assets/${createdAssetId}`,
+      null,
+      { 'x-admin-token': ADMIN_TOKEN }
+    );
+    assert.equal(res.status, 200);
+    assert.ok(res.body.removed);
+    const portfolioRes = await request('GET', '/api/portfolio');
+    assert.ok(!portfolioRes.body.assets.some((a) => a.id === createdAssetId));
+  });
+
+  it('POST /api/admin/reset clears portfolio with admin token', async () => {
+    const res = await request(
+      'POST',
+      '/api/admin/reset',
+      null,
+      { 'x-admin-token': ADMIN_TOKEN }
+    );
+    assert.equal(res.status, 200);
+    assert.equal(res.body.portfolio.assets.length, 0);
+    assert.equal(res.body.portfolio.totalValue, 0);
   });
 });

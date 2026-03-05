@@ -55,6 +55,11 @@ main {
   font-size: 1.3rem;
 }
 
+.muted {
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
 form {
   display: grid;
   gap: 0.75rem;
@@ -91,6 +96,23 @@ button:hover {
   background: #7dd3fc;
 }
 
+.admin-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #0f172a;
+}
+
+.delete-btn:hover {
+  background: #f87171;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -111,6 +133,11 @@ th {
 
 #form-message {
   margin-top: 0.5rem;
+  color: #4ade80;
+}
+
+#admin-message {
+  margin-top: 0.75rem;
   color: #4ade80;
 }
 
